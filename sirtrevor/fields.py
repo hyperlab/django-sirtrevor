@@ -1,13 +1,13 @@
 import json
 from django.db import models
 from django.conf import settings
-from django.utils.six import with_metaclass, text_type
+from django.utils.six import text_type
 from django.utils.translation import ugettext_lazy as _
 from . import SirTrevorContent
 from .forms import SirTrevorFormField
 
 
-class SirTrevorField(with_metaclass(models.SubfieldBase, models.Field)):
+class SirTrevorField(models.Field):
     description = _("TODO")
 
     def get_internal_type(self):
@@ -19,6 +19,9 @@ class SirTrevorField(with_metaclass(models.SubfieldBase, models.Field)):
         }
         defaults.update(kwargs)
         return super(SirTrevorField, self).formfield(**defaults)
+
+    def from_db_value(self, value, expression, connection, context):
+        return value
 
     def to_python(self, value):
         return SirTrevorContent(value)
